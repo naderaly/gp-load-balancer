@@ -4,18 +4,41 @@ HAProxy (High Availability Proxy) is a TCP/HTTP load balancer and proxy  server 
 
 ## Installation
 
-The following steps were implemented on a small ubuntu EC2 instance, You we need superuser privileges. 
+* The following steps were implemented on a small ubuntu EC2 instance, We need to add an inboud rule for TCP traffic on ports 1344 &11344. 
+
+* In the navigation pane of the Amazon EC2 console, choose **Instances**, Select your instance and look at the **Description** tab, **Security groups** lists the security groups that are associated with the instance. Choose **view inbound rules** to display a list of the rules that are in effect for the instance.
+
+![image](https://user-images.githubusercontent.com/58347752/98373169-86b97500-2047-11eb-9115-459ffa9a08a7.png)
+
+* Select the security group and edit inboud rules
+
+  ![image](https://user-images.githubusercontent.com/58347752/98373855-85d51300-2048-11eb-91ec-03baf8568d96.png)
+
+* Now back to your Instance page and under the Instance summery tab click on connect
+
+![image](https://user-images.githubusercontent.com/58347752/98374258-13186780-2049-11eb-97a7-0cacc64f06ca.png)
+
+* Follow the steps under SSH client tab to connect to the machine
+
+![image](https://user-images.githubusercontent.com/58347752/98374350-3216f980-2049-11eb-8062-cc65dd3841fc.png)
+
+* the .pem file should be downloaded to you localhost while creating the instance but you can redownload it by opening the Amazon EC2 console at                                                      https://console.aws.amazon.com/ec2/, Then In the navigation pane, under **NETWORK & SECURITY**, choose **Key Pairs**.                                                                                        
+
+  ![image](https://user-images.githubusercontent.com/58347752/98374826-eadd3880-2049-11eb-9ae2-cf560df9f32b.png)
+
+* After connectiong to the instance, you we need superuser privileges:
 
 ```bash
 Sudo su -
 ```
 
-Open access to port 1344:
+* Open access to port 1344:
+
 ```bash
 ufw allow 1344
 ```
 
-Install the HAProxy package:
+* Install the HAProxy package:
 
 ```bash
 apt-get update && apt-get upgrade
