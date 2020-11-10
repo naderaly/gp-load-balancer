@@ -4,7 +4,7 @@ HAProxy (High Availability Proxy) is a TCP/HTTP load balancer and proxy  server 
 
 ## Installation
 
-* The following steps were implemented on a small ubuntu EC2 instance, We need to add an inboud rule for TCP traffic on ports 1344 &11344. 
+* The following steps were implemented on a small ubuntu 20.04 EC2 instance, We need to add an inboud rule for TCP traffic on ports 1344 &11344. 
 
 * In the navigation pane of the Amazon EC2 console, choose **Instances**, Select your instance and look at the **Description** tab, **Security groups** lists the security groups that are associated with the instance. Choose **view inbound rules** to display a list of the rules that are in effect for the instance.
 
@@ -32,10 +32,11 @@ HAProxy (High Availability Proxy) is a TCP/HTTP load balancer and proxy  server 
 Sudo su -
 ```
 
-* Open access to port 1344:
+* Open access to ports 1344 & 11344:
 
 ```bash
 ufw allow 1344
+ufw allow 11344
 ```
 
 * Install the HAProxy package:
