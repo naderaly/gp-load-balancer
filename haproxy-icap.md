@@ -106,4 +106,19 @@ listen stats
   Connection closed by foreign host.
   ```
 
+  ## Auto Install
+
+  A script to auto install HAProxy to be used as load balancer for ICAP servers with the default configuration (as mentioned above) to be installed on a running ubuntu server in included in this [repository](https://github.com/k8-proxy/gp-load-balancer) 
+
+  Clone the repository and run the script as root.
+
+  ```bash
+  cd
+  git clone git@github.com:k8-proxy/gp-load-balancer.git
+  sudo su -
+  #Please replace the placeholder with your username
+  cd /home/<username>/gp-load-balancer
+  ./haproxy.sh
+  ```
+
   
