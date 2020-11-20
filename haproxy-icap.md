@@ -8,7 +8,7 @@ Clone the repository and run the script as root.
 
 ```bash
 cd
-git clone git@github.com:k8-proxy/gp-load-balancer.git
+git clone https://github.com/k8-proxy/gp-load-balancer
 sudo su -
 #Please replace the placeholder with your username
 cd /home/<username>/gp-load-balancer
