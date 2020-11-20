@@ -1,6 +1,53 @@
 This documentation shows the steps for installing & configuring haproxy to be used as ICAP server load balancer for icap01.glasswall-icap.com & icap02.glasswall-icap.com. 
 
-## Installation
+## Auto Installation
+
+A script to auto install HAProxy to be used as load balancer for ICAP servers with the default configuration (as mentioned bellow) to be installed on a running ubuntu server in included in this [repository](https://github.com/k8-proxy/gp-load-balancer) 
+
+Clone the repository and run the script as root.
+
+```bash
+cd
+git clone git@github.com:k8-proxy/gp-load-balancer.git
+sudo su -
+#Please replace the placeholder with your username
+cd /home/<username>/gp-load-balancer
+./haproxy.sh
+```
+
+Make sure haproxy is active and running 
+
+```bash
+systemctl status haproxy.service
+```
+
+## Testing
+
+* To confirm functionality telnet your localhost on port 1344 & press 'Enter' multi times as follow
+
+  ```bash
+  telnet localhost 1344
+  ```
+
+* It should print the following indicating server : C-ICAP/0.5.6
+
+  ```
+  Trying 127.0.0.1...
+  Connected to localhost.
+  Escape character is '^]'.
+                  
+  
+  ICAP/1.0 400 Bad request
+  Server: C-ICAP/0.5.6
+  Connection: close
+  
+  Connection closed by foreign host.
+  ```
+
+
+Or for manual installation or for extra configuration manipulation other than the default ones, please follow the following steps:
+
+## Manual Installation
 
 * The following steps were implemented on a small ubuntu 20.04 EC2 instance, We need to add an inboud rule for TCP traffic on ports 1344 &11344. 
 
@@ -104,21 +151,6 @@ listen stats
   Connection: close
   
   Connection closed by foreign host.
-  ```
-
-  ## Auto Install
-
-  A script to auto install HAProxy to be used as load balancer for ICAP servers with the default configuration (as mentioned above) to be installed on a running ubuntu server in included in this [repository](https://github.com/k8-proxy/gp-load-balancer) 
-
-  Clone the repository and run the script as root.
-
-  ```bash
-  cd
-  git clone git@github.com:k8-proxy/gp-load-balancer.git
-  sudo su -
-  #Please replace the placeholder with your username
-  cd /home/<username>/gp-load-balancer
-  ./haproxy.sh
   ```
 
   

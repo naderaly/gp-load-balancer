@@ -3,7 +3,8 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
    exit 1
 fi
-
+apt update
+apt upgrade -y
 ufw allow 1344
 ufw allow 11344
 apt-get install -y haproxy
