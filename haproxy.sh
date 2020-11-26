@@ -6,7 +6,7 @@ fi
 apt update
 apt upgrade -y
 ufw allow 1344
-ufw allow 11344
+ufw allow 1345
 apt-get install -y haproxy
 cat >> /etc/haproxy/haproxy.cfg << EOF
 #The frontend is the node by which HAProxy listens for connections.
