@@ -4,3 +4,5 @@ HAProxy (High Availability Proxy) is a TCP/HTTP load balancer and proxy  server 
 
 Please refer to [haproxy-icap.md](https://github.com/k8-proxy/gp-load-balancer/blob/main/haproxy-icap.md) for the steps of installing & configuring haproxy to be used as ICAP server load balancer.
 
+Or refer to [haproxy-web.md](https://github.com/k8-proxy/gp-load-balancer/blob/main/haproxy-web.md) for the steps of installing & configuring haproxy to be used as web server load balancer.
+
