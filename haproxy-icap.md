@@ -47,7 +47,7 @@ systemctl status haproxy.service
 
 Or for manual installation or for extra configuration manipulation other than the default ones, please follow the following steps:
 
-## Manual Installation
+## AWS instance preparation
 
 * The following steps were implemented on a small ubuntu 20.04 EC2 instance, We need to add an inboud rule for TCP traffic on ports 1344 &11344. 
 
@@ -71,17 +71,19 @@ Or for manual installation or for extra configuration manipulation other than th
 
   ![image](https://user-images.githubusercontent.com/58347752/98374826-eadd3880-2049-11eb-9ae2-cf560df9f32b.png)
 
+## Manual installation
+
 * After connectiong to the instance, you we need superuser privileges:
 
 ```bash
 Sudo su -
 ```
 
-* Open access to ports 1344 & 11344:
+* Open access to ports 1344 & 1345 for ICAP and secure ICAP
 
 ```bash
 ufw allow 1344
-ufw allow 11344
+ufw allow 1345
 ```
 
 * Install the HAProxy package:
@@ -95,34 +97,59 @@ apt-get install haproxy
 
 * When you configure load balancing using HAProxy, there are two types of  nodes which need to be defined: **frontend** and **backend**. The frontend is  the node by which HAProxy listens for connections. Backend nodes are  those by which HAProxy can forward requests. A third node type, the  stats node, can be used to monitor the load balancer and the other two  nodes.
 
-* Add the following blocks of settings to the /etc/haproxy/haproxy.cfg file:
+* Open & add the following blocks of settings to the /etc/haproxy/haproxy.cfg file:
 
 ```bash
-#The frontend is the node by which HAProxy listens for connections. 
+#The frontend is the node by which HAProxy listens for connections (ICAP).
 frontend ICAP
 bind 0.0.0.0:1344
 mode tcp
 default_backend icap_pool
-
 #Backend nodes are those by which HAProxy can forward requests
 backend icap_pool
 balance roundrobin
 mode tcp
-server icap01 54.155.107.189:1344 check
-server icap02 34.240.204.39:1344 check
+server icap01 54.77.168.168:1344 check
+server icap02 3.139.22.215:1344 check
+
+#The frontend is the node by which HAProxy listens for connections (Secure-ICAP).
+frontend S-ICAP
+bind 0.0.0.0:1345
+mode tcp
+default_backend s-icap_pool
+#Backend nodes are those by which HAProxy can forward requests
+backend s-icap_pool
+balance roundrobin
+mode tcp
+server icap01 54.77.168.168:1345 check
+server icap02 3.139.22.215:1345 check
 
 #Haproxy monitoring Webui(optional) configuration, access it <Haproxy IP>:32700
 listen stats
-    bind :32700
-    stats enable
-    stats uri /
-    stats hide-version
-    stats auth username:password
+bind :32700
+stats enable
+stats uri /
+stats hide-version
+stats auth username:password
 ```
+
+* Here we have to frontends as HAproxy is listening on port 1344 for ICAP connection and on port 1345 for secure ICAP connection
 
 * The balance setting specifies the load-balancing strategy. In this case, the **roundrobin** strategy is used. This strategy uses each server in turn but allows for weights to be assigned to each server: servers with higher weights are  used more frequently. Other strategies include **static-rr**, which is similar to **roundrobin** but does not allow weights to be adjusted on the fly; and **leastconn**, which will forward requests to the server with the lowest number of connections.
 
 * The **server** lines define the actual server nodes and their IP addresses, to which IP addresses will be forwarded.
+
+* The stats section defines HAProxy **Stats page** that shows you an abundance of metrics that cover the health of your servers, current request rates, response times, and more.
+  The HAProxy stats node will listen on port 32700 for connections and is  configured to hide the version of HAProxy as well as to require a  password login. Replace `password` with a more secure password.
+  
+  From your browser access the stats page through the following:
+  URL : <Haproxy IP>:32700
+  
+  Username: username
+  
+  Password: password
+
+![image](https://user-images.githubusercontent.com/58347752/101278958-7cfe6b00-37c7-11eb-923d-28788f224433.png)
 
 * Restart the HAProxy service & check it's status.
 
