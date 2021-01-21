@@ -36,8 +36,10 @@ func Check(arg []string) {
 	port := arg[3]
 
 	filename := "test.pdf"
+	_ = filename
 
-	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-f", filename, "-s", "gw_rebuild", "-o", "reb_" + filename, "-v"}
+	//	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-f", filename, "-s", "gw_rebuild", "-o", "reb_" + filename, "-v"}
+	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-v"}
 
 	s := run(15, "time", runcmd...)
 	if s == "0" {
