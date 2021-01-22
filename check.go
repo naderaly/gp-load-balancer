@@ -43,10 +43,12 @@ func Check(arg []string) {
 
 	s := run(15, "time", runcmd...)
 	if s == "0" {
-		fmt.Printf("exitcode:0")
+		fmt.Printf("exitcode 0")
+		os.Exit(0)
 
 	} else {
-		fmt.Printf("exitcode:1")
+		//fmt.Printf("exitcode:1")
+		os.Exit(1)
 	}
 
 }
