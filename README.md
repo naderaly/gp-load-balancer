@@ -11,4 +11,5 @@ the arg 3 will be server name
 the arg 4 will be port number
 exitcode 0 if successful and service is run
 exitcode 1 if failed 
+go build check.go
 
