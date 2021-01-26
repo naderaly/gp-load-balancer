@@ -14,6 +14,14 @@ import (
 
 var defaultFailedCode = 1
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func main() {
 	//argsWithProg := os.Args
 	argsWithoutProg := os.Args[1:]
@@ -38,6 +46,11 @@ func Check(arg []string) {
 	port := arg[3]
 
 	filename := "test.pdf"
+	rebfile := "reb_" + filename
+	if fileExists(filename) {
+		os.Remove(rebfile)
+	}
+
 	_ = filename
 
 	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-f", filename, "-s", "gw_rebuild", "-o", "reb_" + filename, "-v"}
@@ -57,6 +70,7 @@ func Check(arg []string) {
 func run(timeout int, command string, args ...string) string {
 
 	// instantiate new command
+
 	cmd := exec.Command(command, args...)
 
 	// get pipe to standard output
