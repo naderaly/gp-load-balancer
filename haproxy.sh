@@ -36,6 +36,8 @@ server icap02 3.139.22.215:1345 check
 #Haproxy monitoring Webui(optional) configuration, access it <Haproxy IP>:32700
 listen stats
 bind :32700
+option http-use-htx
+http-request use-service prometheus-exporter if { path /metrics }
 stats enable
 stats uri /
 stats hide-version
