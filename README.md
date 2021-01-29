@@ -29,21 +29,15 @@ go run check.go 192.168.100.100 80 54.194.133.136 1344 -v
 ```
 the third argument 54.194.133.136 server ip fourth argument port number the last  argument -v verbos out of shell script  
 ```
+![Kiku](images/healthy.jpg)
 
-```html
-<p align="center">
-<img src="image/healthy.jpg" width="350" title="healthy server">
-</p>   
-```
 
 exitcode 0 it's  successful and healthy server 
 
 go run check.go 192.168.100.100 80 34.244.7.158 433 -v
-```html
-<p align="center"> 
-<img src="image/error1.png" width="350" title="healthy server">
-</p>
-```
+
+![Kiku](images/error1.png)
+
 
 exitcode 1 it's failed and not healthy server
 
