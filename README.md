@@ -38,7 +38,7 @@ exitcode 0 it's  successful and healthy server
 
 go run check.go 192.168.100.100 80 34.244.7.158 433 -v
 ```html
-  <img src="./image/error.jpg" width="350" title="healthy server">
+  <img src="./image/error1.jpg" width="350" title="healthy server">
 ```
 
 exitcode 1 it's failed and not healthy server
