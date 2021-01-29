@@ -44,6 +44,7 @@ func Check(arg []string) {
 
 	servername := arg[2]
 	port := arg[3]
+	lastrg := len(arg) - 1
 
 	filename := "test.pdf"
 	rebfile := "reb_" + filename
@@ -56,18 +57,22 @@ func Check(arg []string) {
 	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-f", filename, "-s", "gw_rebuild", "-o", "reb_" + filename, "-v"}
 	//runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-v"}
 	//c-icap-client -i eu.icap.glasswall-icap.com -p 1344 -f test.pdf -s gw_rebuild -o reh.pdf
-	s := run(10, "time", runcmd...)
+	s := run(10, arg[lastrg], "time", runcmd...)
 	if s == "0" {
-		fmt.Printf("exitcode 0")
+		if arg[lastrg] == "-v" {
+			fmt.Printf("exitcode 0")
+		}
 		os.Exit(0)
 
 	} else {
-		fmt.Printf(s)
+		if arg[lastrg] == "-v" {
+			fmt.Printf(s)
+		}
 		os.Exit(1)
 	}
 
 }
-func run(timeout int, command string, args ...string) string {
+func run(timeout int, lastarg string, command string, args ...string) string {
 
 	// instantiate new command
 
@@ -85,8 +90,11 @@ func run(timeout int, command string, args ...string) string {
 	if err := cmd.Start(); err != nil {
 		return "cmd.Start() error: " + err.Error()
 	}
+
 	slurp, _ := ioutil.ReadAll(stderr)
-	fmt.Printf("%s\n", slurp)
+	if lastarg == "-v" {
+		fmt.Printf("%s\n", slurp)
+	}
 	outlines := strings.Split(string(slurp), "\n")
 	l := len(outlines)
 	req := false
