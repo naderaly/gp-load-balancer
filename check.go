@@ -13,6 +13,7 @@ import (
 )
 
 var defaultFailedCode = 1
+var timeout int64 = 35
 
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
@@ -23,6 +24,7 @@ func fileExists(filename string) bool {
 }
 
 func main() {
+
 	//argsWithProg := os.Args
 	argsWithoutProg := os.Args[1:]
 	if len(argsWithoutProg) == 0 {
@@ -57,22 +59,26 @@ func Check(arg []string) {
 	runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-f", filename, "-s", "gw_rebuild", "-o", "reb_" + filename, "-v"}
 	//runcmd := []string{"c-icap-client", "-i", servername, "-p", port, "-v"}
 	//c-icap-client -i eu.icap.glasswall-icap.com -p 1344 -f test.pdf -s gw_rebuild -o reh.pdf
-	s := run(10, arg[lastrg], "time", runcmd...)
+	s := run(timeout, arg[lastrg], "time", runcmd...)
 	if s == "0" {
 		if arg[lastrg] == "-v" {
-			fmt.Printf("exitcode 0")
+			fmt.Println("exitcode 0")
 		}
 		os.Exit(0)
 
+	} else if s == "2" {
+		fmt.Println("failed/timedout")
+		os.Exit(1)
+
 	} else {
 		if arg[lastrg] == "-v" {
-			fmt.Printf(s)
+			fmt.Println(s)
 		}
 		os.Exit(1)
 	}
 
 }
-func run(timeout int, lastarg string, command string, args ...string) string {
+func run(timeout int64, lastarg string, command string, args ...string) string {
 
 	// instantiate new command
 
@@ -81,7 +87,8 @@ func run(timeout int, lastarg string, command string, args ...string) string {
 	// get pipe to standard output
 	stdout, err := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
-
+	IcapHeader := false
+	RespHeader := false
 	if err != nil {
 		return "cmd.StdoutPipe() error: " + err.Error()
 	}
@@ -90,25 +97,7 @@ func run(timeout int, lastarg string, command string, args ...string) string {
 	if err := cmd.Start(); err != nil {
 		return "cmd.Start() error: " + err.Error()
 	}
-
-	slurp, _ := ioutil.ReadAll(stderr)
-	if lastarg == "-v" {
-		fmt.Printf("%s\n", slurp)
-	}
-	outlines := strings.Split(string(slurp), "\n")
-	l := len(outlines)
-	req := false
-	for _, line := range outlines[1 : l-1] {
-		//parsedLine := strings.Fields(line)
-		if strings.Contains(line, "HTTP/1.0 200 OK") == true {
-			req = true
-		}
-
-	}
-	if req == false {
-		return "Service not run "
-	}
-
+	_ = stdout
 	// setup a buffer to capture standard output
 	var buf bytes.Buffer
 
@@ -117,6 +106,25 @@ func run(timeout int, lastarg string, command string, args ...string) string {
 	go func() {
 		if _, err := buf.ReadFrom(stdout); err != nil {
 			panic("buf.Read(stdout) error: " + err.Error())
+		}
+		slurp, _ := ioutil.ReadAll(stderr)
+		if lastarg == "-v" {
+			fmt.Printf("%s\n", slurp)
+		}
+		outlines := strings.Split(string(slurp), "\n")
+		l := len(outlines)
+		if l > 1 {
+			for _, line := range outlines[1 : l-1] {
+				//parsedLine := strings.Fields(line)
+
+				if strings.Contains(line, "HTTP/1.0 200 OK") == true {
+					RespHeader = true
+				}
+				if strings.Contains(line, "ICAP/1.0 200 OK") == true {
+					IcapHeader = true
+				}
+
+			}
 		}
 
 		done <- cmd.Wait()
@@ -128,11 +136,15 @@ func run(timeout int, lastarg string, command string, args ...string) string {
 		if err := cmd.Process.Kill(); err != nil {
 			return "failed to kill: " + err.Error()
 		}
-		return "1"
+		return "2"
 	case err := <-done:
 		if err != nil {
 			close(done)
+
 			return "exitcode: " + err.Error()
+		}
+		if IcapHeader == false || RespHeader == false {
+			return "service not run "
 		}
 
 		return "0" + buf.String()
