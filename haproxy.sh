@@ -7,8 +7,16 @@ apt update
 apt upgrade -y
 ufw allow 1344
 ufw allow 1345
+sh logging.sh
 apt-get install -y haproxy
 cat >> /etc/haproxy/haproxy.cfg << EOF
+#Logging
+global
+  log 127.0.0.1:514  local0 
+  profiling.tasks on
+defaults
+  log global
+  log-format "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts %ac/%fc/%bc/%sc/%rc %sq/%bq"
 #The frontend is the node by which HAProxy listens for connections.
 frontend ICAP
 bind 0.0.0.0:1344
