@@ -87,6 +87,14 @@ apt-get install haproxy
 * Open & add the following blocks of settings to the /etc/haproxy/haproxy.cfg file:
 
 ```bash
+#Logging
+global
+  log 127.0.0.1:514  local0 
+  profiling.tasks on
+defaults
+  log global
+  log-format "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts %ac/%fc/%bc/%sc/%rc %sq/%bq"
+  
 #The frontend is the node by which HAProxy listens for connections (ICAP).
 frontend ICAP
 bind 0.0.0.0:1344
@@ -143,7 +151,7 @@ stats auth username:password
 * Restart the HAProxy service & check it's status.
 
   ```bash
-  systemctl restart haproxy.service 
+  systemctl reload haproxy.service 
   systemctl status haproxy.service 
   ```
 

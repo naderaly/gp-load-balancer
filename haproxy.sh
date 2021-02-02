@@ -51,4 +51,4 @@ stats uri /
 stats hide-version
 stats auth username:password
 EOF
-systemctl restart haproxy.service 
+systemctl reload haproxy.service 
