@@ -1,4 +1,4 @@
-This documentation shows the steps for installing & configuring haproxy to be used as ICAP server load balancer for icap01.glasswall-icap.com & icap02.glasswall-icap.com. 
+This documentation shows the steps for installing & configuring haproxy to be used as ICAP server load balancer for ICAP servers. 
 
 ## Auto Installation
 
@@ -73,19 +73,6 @@ Or for manual installation or for extra configuration manipulation other than th
 
 ## Manual installation
 
-* After connectiong to the instance, you we need superuser privileges:
-
-```bash
-Sudo su -
-```
-
-* Open access to ports 1344 & 1345 for ICAP and secure ICAP
-
-```bash
-ufw allow 1344
-ufw allow 1345
-```
-
 * Install the HAProxy package:
 
 ```bash
@@ -109,8 +96,8 @@ default_backend icap_pool
 backend icap_pool
 balance roundrobin
 mode tcp
-server icap01 54.77.168.168:1344 check
-server icap02 3.139.22.215:1344 check
+server icap01 <ADD YOUR SERVER IP HERE>:1344 check
+server icap02 <ADD YOUR SERVER IP HERE>:1344 check
 
 #The frontend is the node by which HAProxy listens for connections (Secure-ICAP).
 frontend S-ICAP
@@ -121,12 +108,14 @@ default_backend s-icap_pool
 backend s-icap_pool
 balance roundrobin
 mode tcp
-server icap01 54.77.168.168:1345 check
-server icap02 3.139.22.215:1345 check
+server icap01 <ADD YOUR SERVER IP HERE>:1345 check
+server icap02 <ADD YOUR SERVER IP HERE>:1345 check
 
 #Haproxy monitoring Webui(optional) configuration, access it <Haproxy IP>:32700
 listen stats
 bind :32700
+option http-use-htx
+http-request use-service prometheus-exporter if { path /metrics }
 stats enable
 stats uri /
 stats hide-version
