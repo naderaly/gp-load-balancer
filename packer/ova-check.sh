@@ -15,8 +15,8 @@ echo "Upload Completed !!!"
 
 BUCKET=$(cat packer/ova-export.json | jq -r .S3Bucket)
 
-OBJECT="$(aws s3 ls $BUCKET/vms/SOW-REST/ | sort | tail -n 1 | awk '{print $4}')"
-aws s3 mv s3://${BUCKET}/vms/SOW-REST/${OBJECT} s3://${BUCKET}/vms/SOW-REST/${OVA_NAME}
+OBJECT="$(aws s3 ls $BUCKET/vms/HAProxy-ICAP/ | sort | tail -n 1 | awk '{print $4}')"
+aws s3 mv s3://${BUCKET}/vms/HAProxy-ICAP/${OBJECT} s3://${BUCKET}/vms/HAProxy-ICAP/${OVA_NAME}
 
 # Uncomment to import OVA to AWS
 
