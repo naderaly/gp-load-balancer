@@ -1,12 +1,12 @@
 {
     "variables": {
-      "security_group_ids": "sg-0120400d5eefb0b9e"
+      "security_group_ids": "sg-0996adad67e6beef0"
     },
     "builders": [
       {
         "access_key": "{{user `aws_access_key`}}",
         "ami_name": "{{user `vm_name`}}-{{user `github_sha`}}",
-        "instance_type": "t3.large",
+        "instance_type": "t2.medium",
         "region": "{{user `region`}}",
         "secret_key": "{{user `aws_secret_key`}}",
         "ssh_username": "ubuntu",
