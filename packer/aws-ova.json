@@ -29,9 +29,11 @@
             "Name": "haproxy-icap"
         },
         "run_tags": {
-            "Name": "Packer Builder haproxy-icap",
-            "Team": "haproxy-icap",
-            "Owner": "githubactionAMIpacker"
+            "Name": "Packer Builder {{user `vm_name`}}",
+            "Team": "{{user `team_tag`}}",
+            "Owner": "{{user `owner_tag`}}",
+            "Scope": "Build AMI",
+            "Delete": "No"
         },
         "launch_block_device_mappings": [
           {
