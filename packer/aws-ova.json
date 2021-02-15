@@ -51,7 +51,7 @@
         },
         {
             "type": "file",
-            "source":"../scripts/agent",
+            "source":"./scripts/agent",
             "destination":"/tmp/"
         },
         {
